@@ -11,42 +11,48 @@
  * This is a demo program showing the use of the DifferentialDrive class.
  * Runs the motors with arcade steering.
  */
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot
+{
   frc::PWMSparkMax m_leftMotorLead{10};
+  frc::PWMSparkMax m_leftMotorFollow{11};
   frc::PWMSparkMax m_rightMotorLead{20};
-    frc::PWMSparkMax m_rightMotorFollow{21};
-    frc::PWMSparkMax m_leftMotorFollow{11};
+  frc::PWMSparkMax m_rightMotorFollow{21};
 
   frc::DifferentialDrive m_robotDrive{
-      [&](double output) { m_leftMotorLead.Set(output); },
-      [&](double output) { m_rightMotorLead.Set(output); }};
+      [&](double output)
+      { m_leftMotorLead.Set(output); },
+      [&](double output)
+      { m_rightMotorLead.Set(output); }};
   frc::Joystick m_stick{0};
 
- public:
-  Robot() {
+public:
+  Robot()
+  {
     wpi::SendableRegistry::AddChild(&m_robotDrive, &m_leftMotorLead);
     wpi::SendableRegistry::AddChild(&m_robotDrive, &m_rightMotorLead);
   }
 
-  void RobotInit() override {
+  void RobotInit() override
+  {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotorLead.SetInverted(true);
 
-    m_leftMotorLead.AddFollower(m_leftMotorFollow);
-    m_rightMotorLead.AddFollower(m_rightMotorFollow);
-
+    // m_leftMotorLead.AddFollower(m_leftMotorFollow);
+    // m_rightMotorLead.AddFollower(m_rightMotorFollow);
   }
 
-  void TeleopPeriodic() override {
+  void TeleopPeriodic() override
+  {
     // Drive with arcade style
     m_robotDrive.ArcadeDrive(-m_stick.GetY(), -m_stick.GetX());
   }
 };
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main()
+{
   return frc::StartRobot<Robot>();
 }
 #endif
