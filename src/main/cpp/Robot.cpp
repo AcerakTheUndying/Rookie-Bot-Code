@@ -5,44 +5,44 @@
 #include <frc/Joystick.h>
 #include <frc/TimedRobot.h>
 #include <frc/drive/DifferentialDrive.h>
-#include <rev/CANSparkMax>
+#include "rev/CANSparkMax.h"
 //#include <frc/motorcontrol/PWMSparkMax.h>
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class.
  * Runs the motors with arcade steering.
  */
-class Robot : public frc::TimedRobotz
+class Robot : public frc::TimedRobot
 {
   static const int leftLeadDeviceID = 10, leftFollowDeviceID = 11, rightLeadDeviceID = 20, rightFollowDeviceID = 21;
-  rev::CANSparkMax m_leftLeadMotor{leftLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_rightLeadMotor{rightLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_leftFollowMotor{leftFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_rightFollowMotor{rightFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_leftLeadMotor{leftLeadDeviceID, rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax m_rightLeadMotor{rightLeadDeviceID, rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax m_leftFollowMotor{leftFollowDeviceID, rev::CANSparkMax::MotorType::kBrushed};
+  rev::CANSparkMax m_rightFollowMotor{rightFollowDeviceID, rev::CANSparkMax::MotorType::kBrushed};
 
-  frc::DifferentialDrive m_robotDrive{
-      [&](double output)
-      { m_leftMotorLead.Set(output); },
-      [&](double output)
-      { m_rightMotorLead.Set(output); }};
+  frc::DifferentialDrive m_robotDrive{m_leftLeadMotor, m_rightLeadMotor};
   frc::Joystick m_stick{0};
 
 public:
   Robot()
   {
-    wpi::SendableRegistry::AddChild(&m_robotDrive, &m_leftMotorLead);
-    wpi::SendableRegistry::AddChild(&m_robotDrive, &m_rightMotorLead);
+    wpi::SendableRegistry::AddChild(&m_robotDrive, &m_leftLeadMotor);
+    wpi::SendableRegistry::AddChild(&m_robotDrive, &m_rightLeadMotor);
   }
 
   void RobotInit() override
   {
+    m_leftLeadMotor.RestoreFactoryDefaults();
+    m_rightLeadMotor.RestoreFactoryDefaults();
+    m_leftFollowMotor.RestoreFactoryDefaults();
+    m_rightFollowMotor.RestoreFactoryDefaults();
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotorLead.SetInverted(true);
+    m_rightLeadMotor.SetInverted(true);
 
-    // m_leftMotorLead.AddFollower(m_leftMotorFollow);
-    // m_rightMotorLead.AddFollower(m_rightMotorFollow);
+    m_leftFollowMotor.Follow(m_leftLeadMotor);
+    m_rightFollowMotor.Follow(m_rightLeadMotor);
   }
 
   void TeleopPeriodic() override
