@@ -5,18 +5,20 @@
 #include <frc/Joystick.h>
 #include <frc/TimedRobot.h>
 #include <frc/drive/DifferentialDrive.h>
-#include <frc/motorcontrol/PWMSparkMax.h>
+#include <rev/CANSparkMax>
+//#include <frc/motorcontrol/PWMSparkMax.h>
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class.
  * Runs the motors with arcade steering.
  */
-class Robot : public frc::TimedRobot
+class Robot : public frc::TimedRobotz
 {
-  frc::PWMSparkMax m_leftMotorLead{10};
-  frc::PWMSparkMax m_leftMotorFollow{11};
-  frc::PWMSparkMax m_rightMotorLead{20};
-  frc::PWMSparkMax m_rightMotorFollow{21};
+  static const int leftLeadDeviceID = 10, leftFollowDeviceID = 11, rightLeadDeviceID = 20, rightFollowDeviceID = 21;
+  rev::CANSparkMax m_leftLeadMotor{leftLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_rightLeadMotor{rightLeadDeviceID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_leftFollowMotor{leftFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_rightFollowMotor{rightFollowDeviceID, rev::CANSparkMax::MotorType::kBrushless};
 
   frc::DifferentialDrive m_robotDrive{
       [&](double output)
