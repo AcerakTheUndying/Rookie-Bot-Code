@@ -56,8 +56,8 @@ public:
   void TeleopPeriodic() override
   {
     // Drive with arcade style
-    m_robotDrive.ArcadeDrive(deadband(-m_stick.GetY() * (((1 - m_stick.GetThrottle()) / 2) * 1.5), 0.2), 
-                             deadband(-m_stick.GetX() * (((1 - m_stick.GetThrottle()) / 2) * 1.5), 0.2));
+    m_robotDrive.ArcadeDrive(deadband(-m_stick.GetY() * (((1 - m_stick.GetThrottle()) / 2) * 3.0), 0.1), 
+                             deadband(-m_stick.GetX() * (((1 - m_stick.GetThrottle()) / 2) * 3.0), 0.1));
   }
 };
 
