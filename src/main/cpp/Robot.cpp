@@ -39,14 +39,10 @@ public:
 
   void RobotInit() override
   {
-    m_leftLeadMotor.RestoreFactoryDefaults();
-    m_rightLeadMotor.RestoreFactoryDefaults();
-    m_leftFollowMotor.RestoreFactoryDefaults();
-    m_rightFollowMotor.RestoreFactoryDefaults();
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightLeadMotor.SetInverted(true);
+    m_rightLeadMotor.SetInverted(false);
     m_leftLeadMotor.SetInverted(true);
 
     m_leftFollowMotor.Follow(m_leftLeadMotor);
@@ -56,8 +52,8 @@ public:
   void TeleopPeriodic() override
   {
     // Drive with arcade style
-    m_robotDrive.ArcadeDrive(deadband(-m_stick.GetY() * (((1 - m_stick.GetThrottle()) / 2) * 3.0), 0.1), 
-                             deadband(-m_stick.GetX() * (((1 - m_stick.GetThrottle()) / 2) * 3.0), 0.1));
+    m_robotDrive.ArcadeDrive(deadband(-m_stick.GetY() * (((1 - m_stick.GetThrottle()) / 2) ), 0.05),
+                            deadband(-m_stick.GetX() * 0.5, 0.05));
   }
 };
 
