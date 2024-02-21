@@ -6,7 +6,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/drive/DifferentialDrive.h>
 #include "rev/CANSparkMax.h"
-//#include <frc/motorcontrol/PWMSparkMax.h>
+// #include <frc/motorcontrol/PWMSparkMax.h>
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class.
@@ -23,8 +23,15 @@ class Robot : public frc::TimedRobot
   frc::DifferentialDrive m_robotDrive{m_leftLeadMotor, m_rightLeadMotor};
   frc::Joystick m_stick{0};
 
-  static double deadband(const double input, const double threshold){
-    if (std::abs(input) > std::abs(threshold)){
+  const int shooterMotorID = 1;
+  rev::CANSparkMax m_shooterMotor{shooterMotorID, rev::CANSparkMax::MotorType::kBrushless};
+
+  bool shooting = false;
+
+  static double deadband(const double input, const double threshold)
+  {
+    if (std::abs(input) > std::abs(threshold))
+    {
       return input;
     }
     return 0;
@@ -52,9 +59,27 @@ public:
   void TeleopPeriodic() override
   {
     // Drive with arcade style
-    m_robotDrive.ArcadeDrive(deadband(-m_stick.GetY() * (((1 - m_stick.GetThrottle()) / 2) ), 0.05),
-                            deadband(-m_stick.GetX() * 0.5, 0.05));
+    m_robotDrive.ArcadeDrive(deadband(-m_stick.GetY() * (((1 - m_stick.GetThrottle()) / 2)), 0.05),
+                             deadband(-m_stick.GetX() * 0.5, 0.05));
+
+    
+
+    if (m_stick.GetRawButton(1))
+    {
+      shooting = true;
+    }
+    else
+    {
+      shooting = false;
+    }
+
+    if (shooting = true)
+    {
+      m_shooterMotor.Set(m_stick.GetThrottle());
+    }
   }
+
+
 };
 
 #ifndef RUNNING_FRC_TESTS
@@ -63,3 +88,5 @@ int main()
   return frc::StartRobot<Robot>();
 }
 #endif
+
+
